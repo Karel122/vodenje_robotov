@@ -1,0 +1,19 @@
+<launch>
+  <!-- <param name="/parameter_name" type="variable_type" value="variable_value"/> -->
+  <!-- <node name="name_of_the_node" pkg="name_of_the_package" type="source_file.py" ns="namespace" args="optional arguments"/> -->
+  <include file="$(find ur_robot_driver)/launch/ur5e_bringup.launch">
+
+    <arg name="robot_ip" value="192.168.65.244" />
+    <arg name="reverse_ip" default="" doc="IP of the driver, if set to empty it will detect it automatically."/>
+    <arg name="reverse_port" default="50001" doc="Port that will be opened by the driver to allow direct communication between the driver and the robot controller."/>
+    <arg name="script_sender_port" default="50002" doc="The driver will offer an interface to receive the program's URScript on this port. If the robot cannot connect to this port, `External Control` will stop immediately."/>
+    <arg name="trajectory_port" default="50003" doc="Port that will be opened by the driver to allow trajectory forwarding."/>
+    <arg name="script_command_port" default="50004" doc="Port that will be opened by the driver to allow forwarding script commands to the robot."/>
+    <arg name="controllers" default="joint_state_controller force_torque_sensor_controller  speed_scaling_state_controller twist_controller" doc="Controllers that are activated by default."/>
+    <arg name="ur_hardware_interface_node_required" default="true" doc="Shut down ros environment if ur_hardware_interface-node dies."/>
+    <!-- <node name="premakni.py" pkg="micka_in_janez" type="premakni.py" ns="namespace" args="optional arguments"/> -->
+
+
+  </include>
+</launch>
+
