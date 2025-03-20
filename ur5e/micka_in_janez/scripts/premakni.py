@@ -32,13 +32,18 @@ class RobotControl():
             
         self.wrench_subscriber = rospy.Subscriber('/wrench', WrenchStamped, self.wrench_callback)
 
+
+        rospy.wait_for_service('/ur_hardware_interface/zero_ftsensor')
+        rospy.loginfo("Zero FT sensor ready.")
+        self.kalibracija = rospy.ServiceProxy('/ur_hardware_interface/zero_ftsensor',Trigger)
+        zagon = TriggerRequest()
+        # resp = self.kalibracija(zagon)
+        # print(resp)
+
         self.ctrl_c = False
         self.rate = rospy.Rate(100)
         rospy.on_shutdown(self.shutdownhook)
-
-        ############################
-
-
+        
 
 
 
@@ -137,72 +142,30 @@ class RobotControl():
                 #self.cmd.linear.z = 0
                 #self.cmd.linear.y = 0
 
-                self.cmd.linear.x = -0.025*silaAVRGy
+                """ self.cmd.linear.x = -0.025*silaAVRGy
                 self.cmd.linear.y = -0.035*silaAVRGx
-                self.cmd.linear.z = -0.025*silaAVRGz
+                self.cmd.linear.z = -0.025*silaAVRGz 
+                """
             
+                self.cmd.linear.x = -0.010*silaAVRGy
+                self.cmd.linear.y = -0.015*silaAVRGx
+                self.cmd.linear.z = -0.010*silaAVRGz
+
 
             else:
                 self.cmd.linear.x = 0
                 self.cmd.linear.y = 0
-                self.cmd.linearrospy.wait_for_service('/ur_hardware_interface/zero_ftsensor')
+                self.cmd.linear.z = 0
+                #self.cmd.linearrospy.wait_for_service('/ur_hardware_interface/zero_ftsensor')
 
         
 
-            self.vel_publisher.publish(self.cmd)
-            print(self.cmd)
+            #self.vel_publisher.publish(self.cmd)
+            #print(self.cmd)
 
 
         
 
-    # def move_straight(self):
-
-    #     # Initilize velocities
-    #     self.cmd.linear.x = 0
-    #     self.cmd.linear.y = 0
-    #     self.cmd.linear.z = 0     # HITROSTI
-    #     self.cmd.angular.x = 0
-    #     self.cmd.angular.y = 0
-    #     self.cmd.angular.z = 0
-
-    #     # Publish the velocity
-    #     self.publish_once_in_cmd_vel()
-
-    # def move_straight_time(self, motion, speed, time):
-
-    #     # Initilize velocities
-    #     self.cmd.linear.y = 0
-    #     self.cmd.linear.z = 0
-    #     self.cmd.angular.x = 0
-    #     self.cmd.angular.y = 0
-    #     self.cmd.angular.z = 0
-
-    #     if motion == "up":
-    #         self.cmd.linear.z = speed
-    #     elif motion == "down":
-    #         self.cmd.linear.z = - speed
-
-    #     i = 0
-    #     # loop to publish the velocity estimate, current_distance = velocity * (t1 - t0)
-    #     while (i <= time):
-
-    #         # Publish the velocity
-    #         self.vel_publisher.publish(self.cmd)
-    #         i += 1
-    #         self.rate.sleep()
-    #         print(self.wrenchrospy.wait_for_service('/ur_hardware_interface/zero_ftsensor')
-
-        try:
-            client = rospy.ServiceProxy('/ur_hardware_interface/zero_ftsensor',Trigger)
-            
-        except rospy.ServiceException as e:
-            rospy.logwarn('Service failed' + str(e))_msg.wrench.force.z)
-
-    #     # set velocity to zero to stop the robot
-    #     self.stop_robot()
-
-    #     s = "Moved robot " + motion + " for " + str(time) + " seconds"
-    #     return s
 
 
 if __name__ == '__main__':
@@ -210,7 +173,6 @@ if __name__ == '__main__':
     robotcontrol_object = RobotControl()
     try:
         
-        #robotcontrol_object.move_straight_time('up',0.0, 3) # objekt robotcontrol_object.move_straight_time('up',0.0, 3) direction' up' speed 0.o  3=time (s)
         
         robotcontrol_object.vodenje_robota()
     except rospy.ROSInterruptException:
@@ -220,8 +182,4 @@ if __name__ == '__main__':
 
 
 
-        #try:
-         #   client = rospy.ServiceProxy('/ur_hardware_interface/zero_ftsensor',Trigger)
-            
-        #except rospy.ServiceException as e:
-         #   rospy.logwarn('Service failed' + str(e)).z = 0
+        
